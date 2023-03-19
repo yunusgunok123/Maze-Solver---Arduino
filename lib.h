@@ -2,8 +2,8 @@
 #include "Stepper.h"
 
 // Sensor Pins
-#define forwardPin 2
-#define rightPin 3
+#define forwardPin 3
+#define rightPin 2
 #define leftPin 4
 
 // Motor 1
@@ -11,6 +11,9 @@
 #define AIN2_1 9
 #define BIN1_1 11
 #define BIN2_1 12
+
+
+
 
 // Motor 2
 #define AIN1_2 6
@@ -21,8 +24,8 @@
 #define STEPS 210
 #define SPEED 60
 // Step miktarlarını hesaplaman gerek
-#define forwardStep 500
-#define rotateStep 500
+#define forwardStep 210
+#define rotateStep 165
 
 Stepper motor1(STEPS, AIN2_1, AIN1_1, BIN1_1, BIN2_1);
 Stepper motor2(STEPS, AIN2_2, AIN1_2, BIN1_2, BIN2_2);
@@ -56,42 +59,31 @@ public:
   }
 
   void move(Dir &relDir) {
-    // switch (relDir) {
-    //   case right:
-    //     for (auto i = 0; i < rotateStep/10; i++) {
-    //       motor1.step(10);
-    //       motor2.step(-10);
-    //     }
-    //     break;
-    //   case left:
-    //     for (auto i = 0; i < rotateStep/10; i++) {
-    //       motor1.step(-10);
-    //       motor2.step(10);
-    //     }
-    //     break;
-    //   case backward:
-    //     for (auto i = 0; i < 2 * rotateStep; i++) {
-    //       motor1.step(1);
-    //       motor2.step(-1);
-    //     }
-    //     break;
-    //   default:
-    //     for (auto i = 0; i < forwardStep; i++) {
-    //       motor1.step(1);
-    //       motor2.step(1);
-    //     }
-    // }
-
-    for (auto i = 0; i < rotateStep; i++) {
-      motor1.step(1);
-      motor2.step(-1);
+    switch (relDir) {
+      case right:
+        for (auto i = 0; i < rotateStep; i++) {
+          motor1.step(1);
+          motor2.step(-1);
+        }
+        break;
+      case left:
+        for (auto i = 0; i < rotateStep; i++) {
+          motor1.step(-1);
+          motor2.step(1);
+        }
+        break;
+      case backward:
+        for (auto i = 0; i < 2 * rotateStep; i++) {
+          motor1.step(1);
+          motor2.step(1);
+        }
+        break;
+      default:
+        for (auto i = 0; i < forwardStep; i++) {
+          motor1.step(-1);
+          motor2.step(-1);
+        }
     }
-    delay(1000);
-    for (auto i = 0; i < rotateStep; i++) {
-      motor1.step(-1);
-      motor2.step(1);
-    }
-    delay(1000);
   }
 
   void checkDir(Dir (&relDirs)[4], unsigned char &size) {
@@ -156,9 +148,10 @@ public:
     motor1.setSpeed(SPEED);
     motor2.setSpeed(SPEED);
 
-    for (auto i = 0; i < MAX_SIZE; i++)
-      for (auto j = 0; j < MAX_SIZE; j++) {
-        visitCounts[i][j] = 0;
-      }
+    memset(visitCounts, 0, sizeof(visitCounts));
+    // for (auto i = 0; i < MAX_SIZE; i++)
+    //   for (auto j = 0; j < MAX_SIZE; j++) {
+    //     visitCounts[i][j] = 0;
+    //   }
   }
 };
