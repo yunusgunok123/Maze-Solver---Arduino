@@ -1,6 +1,12 @@
 // Include the library header file
 #include "./lib.h"
 
+
+// Due to memory limitations, the maze can only reach a maximum size of 31 x 31. 
+// To optimize its efficiency, I utilized chars, which only occupy 1 byte of memory, instead of ints that take up 4 bytes. 
+// Interestingly, in C++, bool and char have the same memory size of 1 byte, making it the minimal amount of storage that can be used.
+// This means that the additional 3 bits in bool are essentially unused.
+
 // Create an instance of the Solver class with a maximum size of 31
 Solver<31> solver;
 
