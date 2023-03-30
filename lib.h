@@ -43,12 +43,12 @@ public:
   unsigned int y = 0;
   Dir robAbsDir = forward;
 
-// Function to convert relative direction to absolute direction
+  // Function to convert relative direction to absolute direction
   Dir relDir2AbsDir(Dir &relDir) {
     return (Dir)((robAbsDir + relDir) % 4);
   }
 
-// Function to convert absolute direction to relative direction-+
+  // Function to convert absolute direction to relative direction-+
   Dir absDir2RelDir(Dir &absDir) {
     return (Dir)((absDir - robAbsDir + 4) % 4);
   }
@@ -58,7 +58,7 @@ public:
     return x == 2 && y == 2;
   }
 
-/* This is a function called "move" that takes a reference to a variable of type "Dir" as input.
+  /* This is a function called "move" that takes a reference to a variable of type "Dir" as input.
 * The function then performs different actions based on the value of the "relDir" variable.
 */
   void move(Dir &relDir) {
@@ -98,16 +98,11 @@ public:
     }
   }
 
-
-/* This is a function called "checkDir" that takes an array of "Dir" variables and a reference to an unsigned char variable as input.
-* The function reads the values of three digital pins and populates the array "relDirs" with the directions that the robot can move in.
-* It also modifies the "size" variable to indicate the number of valid directions in the array.
-*/
-  void checkDir(Dir (&relDirs)[4], unsigned char &size) {
+  unsigned char checkDir(Dir (&relDirs)[4]) {
     // Set the first element of "relDirs" to "backward"
     relDirs[0] = backward;
     // Initialize the "index" variable to 1
-    auto index = 1;
+    unsigned char index = 1;
     // Check if the "forwardPin" is high
     if (digitalRead(forwardPin)) {
       // If it is, add "forward" to the next available index in "relDirs" and increment "index"
@@ -126,11 +121,12 @@ public:
       relDirs[index] = left;
       index++;
     }
-    // Set the "size" variable to the final value of "index"
-    size = index;
+
+    // Returns index which is the number of avaiable directions
+    return index;
   }
 
-/* This is a function called "iterate" that implements a pathfinding algorithm for the robot.
+  /* This is a function called "iterate" that implements a pathfinding algorithm for the robot.
 * It first calls the "checkDir" function to determine the valid directions that the robot can move in.
 * It then updates the "visitCounts" array to keep track of how many times each cell has been visited.
 * Next, it calculates the potential moves that the robot can make based on the "relDirs" array and updates the "absDirMap" array to store the absolute directions that the robot is facing.
@@ -140,9 +136,7 @@ public:
   void iterate() {
     // Initialize an array of "Dir" variables called "relDirs" and an unsigned char variable called "size"
     Dir relDirs[4];
-    unsigned char size = 0;
-    // Call the "checkDir" function to populate "relDirs" and "size"
-    checkDir(relDirs, size);
+    auto size = checkDir(relDirs, size);
     // Update the "visitCounts" array to keep track of how many times each cell has been visited
     // If the current cell is a dead end (size == 1), the algorithm marks it as visited four times to ensure that it is not revisited in the future.
     visitCounts[y][x] += size == 1 ? 4 : 1;
@@ -188,7 +182,7 @@ public:
     if (!isFinished()) iterate();
   }
 
-/**
+  /**
 * Initializes a new Solver object.
 * Sets the forwardPin, rightPin, and leftPin as inputs.
 * Sets the speed of motor1 and motor2 to SPEED.
