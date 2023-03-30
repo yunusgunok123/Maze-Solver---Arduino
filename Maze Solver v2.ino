@@ -23,8 +23,7 @@ void loop() {
   if (digitalRead(13)){
     delay(1000);
     Dir dirs[4];
-    unsigned char size = 0;
-    solver.checkDir(dirs, size);
+    solver.checkDir(dirs);
     solver.move(dirs[1]);
   }
 }
